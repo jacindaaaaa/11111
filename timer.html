@@ -1,146 +1,125 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <title>累积计时器</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<!DOCTYPE html> 
+<html lang="zh-_cn"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <title>累积计时器</title> 
+    <style> 
+        body { 
+            font-family: 'Arial', sans-serif; 
+            background-color: #f0f2f5; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+        } 
 
-        .timer-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+        .timer-container { 
+            background-color: white; 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+            text-align: center; 
+        } 
 
-        #timer {
-            font-size: 48px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 20px;
-        }
+        #timer { 
+            font-size: 48px; 
+            font-weight: bold; 
+            color: #333; 
+            margin-bottom: 20px; 
+        } 
 
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
+        .button-container { 
+            display: flex; 
+            justify-content: center; 
+            gap: 10px; 
+            margin-top: 20px; 
+        } 
 
-        button {
-            padding: 12px 25px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 8px;
-            transition: background-color 0.3s, color 0.3s;
-        }
+        button { 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            background-color: #f5f5f5; 
+            color: #2c3e50; 
+        } 
 
-        .start-btn {
-            background-color: #4CAF50;
-            color: white;
-        }
+        button:hover { 
+            background-color: #e8e8e8; 
+            transform: translateY(-1px); 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+        } 
 
-        .pause-btn {
-            background-color: #f44336;
-            color: white;
-        }
+        .start-btn { 
+            background-color: #f5f5f5; 
+            color: #2c3e50; 
+        } 
 
-        .reset-btn {
-            background-color: #2196F3;
-            color: white;
-        }
+        .pause-btn { 
+            background-color: #f5f5f5; 
+            color: #2c3e50; 
+        } 
 
-        button:hover {
-            opacity: 0.8;
-        }
-    </style>
-</head>
-<body>
-    <div class="timer-container">
-        <div id="timer">00:00:00</div>
-        <div class="controls">
-            <button class="start-btn" onclick="startTimer()">开始</button>
-            <button class="pause-btn" onclick="pauseTimer()">暂停</button>
-            <button class="reset-btn" onclick="resetTimer()">重置</button>
-        </div>
-    </div>
+        .reset-btn { 
+            background-color: #f5f5f5; 
+            color: #2c3e50; 
+        } 
+    </style> 
+</head> 
+<body> 
+    <div class="timer-container"> 
+        <div id="timer">00:00:00</div> 
+        <div class="button-container"> 
+            <button class="start-btn" onclick="startTimer()">开始</button> 
+            <button class="pause-btn" onclick="pauseTimer()">暂停</button> 
+            <button class="reset-btn" onclick="resetTimer()">重置</button> 
+        </div> 
+    </div> 
 
-    <script>
-        let isRunning = false;
-        let timerId = null;
+    <script> 
+        let time = 0; 
+        let timerId = null; 
+        let isRunning = false; 
 
-        // 加载时恢复时间
-        function loadTime() {
-            const savedTime = localStorage.getItem('time');
-            if (savedTime) {
-                updateDisplay(savedTime);
-            } else {
-                updateDisplay(0);
-            }
-        }
+        function updateDisplay() { 
+            const hours = Math.floor(time / 3600); 
+            const minutes = Math.floor((time % 3600) / 60); 
+            const seconds = time % 60; 
 
-        // 更新显示并存储时间
-        function updateTime(totalSeconds) {
-            updateDisplay(totalSeconds);
-            localStorage.setItem('time', totalSeconds);
-        }
+            document.getElementById('timer').textContent = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; 
+        } 
 
-        // 格式化时间为 HH:MM:SS
-        function formatTime(seconds) {
-            const hours = Math.floor(seconds / 3600);
-            seconds %= 3600;
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-        }
+        function startTimer() { 
+            if (!isRunning) { 
+                isRunning = true; 
+                timerId = setInterval(() => { 
+                    time++; 
+                    updateDisplay(); 
+                }, 1000); 
+            } 
+        } 
 
-        // 更新显示
-        function updateDisplay(seconds) {
-            const display = document.getElementById('timer');
-            display.textContent = formatTime(seconds);
-        }
+        function pauseTimer() { 
+            isRunning = false; 
+            clearInterval(timerId); 
+            timerId = null; 
+        } 
 
-        // 开始计时器
-        function startTimer() {
-            if (!isRunning) {
-                isRunning = true;
-                let totalSeconds = localStorage.getItem('time') || 0;
+        function resetTimer() { 
+            isRunning = false; 
+            clearInterval(timerId); 
+            timerId = null; 
+            time = 0; 
+            updateDisplay(); 
+        } 
 
-                timerId = setInterval(() => {
-                    totalSeconds++;
-                    updateTime(totalSeconds);
-                }, 1000);
-            }
-        }
-
-        // 暂停计时器
-        function pauseTimer() {
-            isRunning = false;
-            clearInterval(timerId);
-            timerId = null;
-        }
-
-        // 重置计时器
-        function resetTimer() {
-            isRunning = false;
-            clearInterval(timerId);
-            timerId = null;
-            updateDisplay(0);
-            localStorage.removeItem('time');
-        }
-
-        // 加载时间
-        loadTime();
-    </script>
-</body>
-</html>
+        // 初始化显示 
+        updateDisplay(); 
+    </script> 
+</body> 
+</html> 
