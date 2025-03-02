@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专注时钟</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <!-- 左侧计时器部分 -->
+            <div class="timer-section">
+                <h1>专注时钟</h1>
+                
+                <!-- 时钟显示区域 -->
+                <div class="timer">
+                    <div class="time-display">00:00</div>
+                </div>
+
+                <!-- 控制按钮 -->
+                <div class="controls">
+                    <button id="start" class="primary-btn">开始</button>
+                    <button id="pause" class="secondary-btn">暂停</button>
+                    <button id="stop" class="danger-btn">结束</button>
+                </div>
+
+                <!-- 本次计时记录 -->
+                <div class="current-session">
+                    <h2>本次专注</h2>
+                    <div class="session-time">--:--</div>
+                </div>
+            </div>
+
+            <!-- 右侧统计部分 -->
+            <div class="stats-section">
+                <h2>今日专注</h2>
+                <div class="total-time">
+                    <span class="time-value">0</span>
+                    <span class="time-unit">分钟</span>
+                </div>
+                <div class="sessions-list">
+                    <!-- 计时记录将在这里动态添加 -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
